@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sy:switchyard xmlns:bean="urn:switchyard-component-bean:config:1.1" xmlns:camel="urn:switchyard-component-camel:config:1.1" xmlns:jms="urn:switchyard-component-camel-jms:config:1.1" xmlns:resteasy="urn:switchyard-component-resteasy:config:1.1" xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912" xmlns:sy="urn:switchyard-config:switchyard:1.1" name="sfamock-fep" targetNamespace="urn:com.example.switchyard:sfamock-fep:1.0">
+  <sca:composite name="sfamock-fep" targetNamespace="urn:com.example.switchyard:sfamock-fep:1.0">
+    <sca:component name="CitizenService">
+      <camel:implementation.camel>
+        <camel:java class="com.example.switchyard.sfamock.fep.model.CitizenServiceRoute"/>
+      </camel:implementation.camel>
+      <sca:service name="CitizenService">
+        <sca:interface.java interface="com.example.switchyard.sfamock.fep.service.CitizenService"/>
+      </sca:service>
+      <sca:reference name="InboundQRef">
+        <sca:interface.java interface="com.example.switchyard.sfamock.fep.service.InboundQInterface"/>
+      </sca:reference>
+    </sca:component>
+    <sca:service name="CitizenService" promote="CitizenService/CitizenService">
+      <sca:interface.java interface="com.example.switchyard.sfamock.fep.service.CitizenService"/>
+      <resteasy:binding.rest name="rest1">
+        <resteasy:interfaces>com.example.switchyard.sfamock.fep.service.CitizenServiceRestInterface</resteasy:interfaces>
+        <resteasy:contextPath>sfa</resteasy:contextPath>
+      </resteasy:binding.rest>
+    </sca:service>
+    <sca:reference name="InboundQRef" multiplicity="0..1" promote="CitizenService/InboundQRef">
+      <sca:interface.java interface="com.example.switchyard.sfamock.fep.service.InboundQInterface"/>
+      <jms:binding.jms name="jms1">
+        <jms:queue>InboundQ</jms:queue>
+        <jms:connectionFactory>#ConnectionFactory</jms:connectionFactory>
+      </jms:binding.jms>
+    </sca:reference>
+  </sca:composite>
+  <sy:domain>
+    <sy:properties>
+      <sy:property name="org.switchyard.handlers.messageTrace.enabled" value="false"/>
+    </sy:properties>
+  </sy:domain>
+</sy:switchyard>

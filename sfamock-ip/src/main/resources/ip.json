@@ -1,0 +1,22 @@
+[{
+	"name":"SFAMockIP",
+	"version":"1",
+	"typeProcessors":{
+		"com.example.switchyard.sfamock.fep.model.Citizen":{
+			"contexts":[{
+				"type":"Message",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"id"
+				}
+			}],
+			"properties":[{
+				"name":"name",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"name"
+				}
+			}]
+		}
+	}
+}]

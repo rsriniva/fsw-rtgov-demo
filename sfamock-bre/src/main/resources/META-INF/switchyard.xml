@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sy:switchyard xmlns:camel="urn:switchyard-component-camel:config:1.1" xmlns:jms="urn:switchyard-component-camel-jms:config:1.1" xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912" xmlns:sy="urn:switchyard-config:switchyard:1.1" name="sfamock-bre" targetNamespace="urn:com.example.switchyard:sfamock-bre:1.0">
+  <sca:composite name="sfamock-bre" targetNamespace="urn:com.example.switchyard:sfamock-bre:1.0">
+    <sca:component name="DQServiceRoute">
+      <camel:implementation.camel>
+        <camel:java class="com.example.switchyard.sfamock.bre.DQServiceRoute"/>
+      </camel:implementation.camel>
+      <sca:service name="DQService">
+        <sca:interface.java interface="com.example.switchyard.sfamock.bre.InboundQInterface"/>
+      </sca:service>
+      <sca:reference name="OutboundQRef">
+        <sca:interface.java interface="com.example.switchyard.sfamock.bre.InboundQInterface"/>
+      </sca:reference>
+    </sca:component>
+    <sca:service name="DQService" promote="DQServiceRoute/DQService">
+      <sca:interface.java interface="com.example.switchyard.sfamock.bre.InboundQInterface"/>
+      <jms:binding.jms name="jms1">
+        <jms:queue>InboundQ</jms:queue>
+        <jms:connectionFactory>#ConnectionFactory</jms:connectionFactory>
+      </jms:binding.jms>
+    </sca:service>
+    <sca:reference name="OutboundQRef" multiplicity="0..1" promote="DQServiceRoute/OutboundQRef">
+      <sca:interface.java interface="com.example.switchyard.sfamock.bre.InboundQInterface"/>
+      <jms:binding.jms name="jms1">
+        <jms:queue>OutboundQ</jms:queue>
+        <jms:connectionFactory>#ConnectionFactory</jms:connectionFactory>
+      </jms:binding.jms>
+    </sca:reference>
+  </sca:composite>
+</sy:switchyard>
